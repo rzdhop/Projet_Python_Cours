@@ -1,8 +1,8 @@
 import pandas as pd 
 import seaborn as sns
 
-df_entite = pd.read_csv("full-oldb-20220110/nodes-addresses.csv")
-df_officers = pd.read_csv("full-oldb-20220110/nodes-officers.csv")
+df_entite = pd.read_csv("../../assets/full-oldb-20220110/nodes-addresses.csv")
+df_officers = pd.read_csv("../../assets/full-oldb-20220110/nodes-officers.csv")
 
 print("\n\nExo 1 : \n")
 
