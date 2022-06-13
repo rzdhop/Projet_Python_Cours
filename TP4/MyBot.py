@@ -27,14 +27,17 @@ class MyBot(discord.Client):
         logging.debug(f"{self.user} has connected to Discord!\n")
 
     async def on_message(self, message):
-        logging.info(f"user {message.author} have used {message.content.split()[0]} \n")
-
+        try :
+            if message.content[0] == '!':
+                logging.info(f"user {message.author} have used {message.content.split()[0]} \n")
+        except IndexError:
+            pass
 
         if message.content.startswith("!help"):
             await message.channel.send("\
                         Voici votre aide ! \n\
                         !help -> affiche cette aide  \n\
-                        !info -> information sur le craateur  \n\
+                        !info -> information sur le createur  \n\
                         !geoloc <IP> -> geolocalise l'ip  \n\
                         !syracuse <valeur> -> calcule la valeur de syracuse \n\
                         !egypt <valeur1> <valeur2> -> multiplication egyptienne  \n\
@@ -42,10 +45,10 @@ class MyBot(discord.Client):
 
         elif message.content.startswith('!geoloc'):
             if len(message.content.split()) == 2:
-                ip = message.content.split()[1] if len(message.content.split()[1]) >= 7 else await message.channel.send("Please une !help to know how to use this command !")
+                ip = message.content.split()[1] if len(message.content.split()[1]) >= 7 else await message.channel.send("Utilisez !help pour apprendre a utiliser cette commande")
                 await message.channel.send(self.geoloc(ip))
             else :
-                await message.channel.send("Please une !help to know how to use this command !")
+                await message.channel.send("Utilisez !help pour apprendre a utiliser cette commande")
 
         elif message.content.startswith('!info'):
             await message.channel.send("Ce Bot a été réalisé par Rida VERDU en U32 à l'ESIA !")
@@ -54,13 +57,13 @@ class MyBot(discord.Client):
             if len(message.content.split()) == 2:
                 await message.channel.send(self.syracuse(message.content.split()[1]))
             else :
-                await message.channel.send("Please une !help to know how to use this command !")
+                await message.channel.send("Utilisez !help pour apprendre a utiliser cette commande")
         
         elif message.content.startswith('!egypt'):
             if len(message.content.split()) == 3:
                 await message.channel.send(self.egypt(message.content.split()[1], message.content.split()[2]))
             else :
-                await message.channel.send("Please une !help to know how to use this command !")
+                await message.channel.send("Utilisez !help pour apprendre a utiliser cette commande")
 
         elif message.content.startswith('!??'):
             await message.channel.send("aHR0cHM6Ly9iaXQubHkvM3h0OG9oYw==")
@@ -100,9 +103,13 @@ def parse_args():
     return parser.parse_args()
 
 def main():
+    #on récupères les argumetn passé au script
     args = parse_args()
+    #récupere la valeur passé a l'execution du script
     configFile = args.config
+    #instancie et lance le Bot
     TP4_pythonBot = MyBot(configFile)
 
 if __name__ == "__main__":
+    #execute la fonction main
     main()
