@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-import json
 import sys, requests
 
 #on clée une class qui va permettre de gerer les element 

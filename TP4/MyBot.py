@@ -6,10 +6,10 @@ import logging
 from base64 import b64decode
 from shodan import Shodan
 
-#je declare l'objet Mybot qui repart de la base de la class deicord.Client
+#je declare l'objet Mybot qui repart de la base de la class discord.Client
 class MyBot(discord.Client):
     def __init__(self, configFile: str):
-        #appel le constructeur de la class mere
+        #appel le constructeur de la class mère
         super().__init__()
         self.configFile = configFile
         self.logFile = "botLog.log"
@@ -21,22 +21,22 @@ class MyBot(discord.Client):
             "!syracuse" : self.syracuse,
             "!egypt" : self.egypt,
             "!??" : self.wht}
-        #appel le constructeur fait par nous
+        #appelle le second constructeur
         self._localinit()
     
     def _localinit(self):
-        #configure le fichier de log avec une information de niveau 'DEBUG'
+        #configure le fichier de log avec les informations au niveau 'DEBUG'
         logging.basicConfig(filename=self.logFile, level=logging.DEBUG)
-        #export les valuer du fichier en variables d'environnement
+        #exporte les valeurs du fichier en variables d'environnement du script
         load_dotenv(dotenv_path=self.configFile)
-        #recupere les variables et les decodes (j'ai préférer les encodé legerement pour evire les problemes avec github)
+        #recupere les variables et les decodes (j'ai préféré les encodé légerement pour eviter les problemes avec github)
         self.discordtoken = str(b64decode(os.getenv("DISCORD_TOKEN")).decode())
         self.shodantoken = str(b64decode(os.getenv("SHODAN_TOKEN")).decode())
         #lance le bot
         self.run(self.discordtoken)
         
     async def on_ready(self):
-        #quand le bot est pres je m'informe sur le terminal et dans le logfile
+        #quand le bot est prèt je m'informe sur le terminal et dans le logfile
         print("Bot ready !")
         logging.debug(f"{self.user} has connected to Discord!\n")
 
@@ -51,10 +51,11 @@ class MyBot(discord.Client):
         #selon la commande si elle est presente dans notre bibliothèque de fonctions
         for key in self.command:
             if message.content.startswith(key):
-                #ici j'utilise *args pour centraliser l'appel des fonction peux importe le nombre d'args attendus
+                #ici j'utilise *args pour centraliser l'appel des fonctions peux importe le nombre d'args attendus
+                #cela rend aussi facile la fututre implementation de fonctions
                 await message.channel.send(self.command[key](*message.content.split()[1:]))
 
-    #je defini cette methode en tant que detaché de la class elle n'attend pas d'ojet en parametre
+    #je defini cette methode en tant que detaché de la class elle n'attend pas d'objet en parametre
     @staticmethod
     def help(*args):
         return """
@@ -66,7 +67,8 @@ class MyBot(discord.Client):
                     !egypt <valeur1> <valeur2> -> multiplication egyptienne  \n\
                     !?? -> il n'y a rien...
             """
-    #via cette fonction j'affiche les informtions
+        
+    #via cette fonction j'affiche les informations
     @staticmethod
     def info(*args):
         return "Ce Bot a été réalisé par Rida VERDU en U32 à l'ESIA !"
@@ -85,9 +87,12 @@ class MyBot(discord.Client):
             return "Utilisez !help pour apprendre a utiliser cette commande"
         #j'instancie une connection a l'api avec mon token api
         api = Shodan(self.shodantoken)
-        #je requete l'api pour avoir les info par rapport a l'api
-        rep = api.host(args[0])
-        #je formate les donnée pour afficher les coordoné"
+        #je requete l'api pour avoir les infos par rapport a l'api
+        try :
+            rep = api.host(args[0])
+        except Exception as e:
+            return f"Attention ! {e}"
+        #je formate les données pour afficher les coordonées
         coordonnee = f"{rep['latitude']}/{rep['longitude']}"
         #je retourne les coordonée et un lien pour une visualisation directe sur openstreetmap 
         return f"Voici les coordonée : {coordonnee} -> https://www.openstreetmap.org/#map=19/{coordonnee}"
@@ -120,7 +125,7 @@ class MyBot(discord.Client):
             a = int(a // 2)
         return z
 
-#dans cette focntion recupere le nom du fichier de config avec les token api
+#dans cette fonction je recupère le nom du fichier de config contenant les clé d'API
 def parse_args():
     parser = ArgumentParser()
     parser.add_argument(
@@ -129,11 +134,11 @@ def parse_args():
     return parser.parse_args()
 
 def main():
-    #on récupères les argumetn passé au script
+    #on récupères les arguments passé au script
     args = parse_args()
-    #récupere la valeur passé a l'execution du script
+    #récupere la valeur passé à l'execution du script
     configFile = args.config
-    #instancie et lance le Bot
+    #instancie etlance le Bot
     TP4_pythonBot = MyBot(configFile)
 
 if __name__ == "__main__":
