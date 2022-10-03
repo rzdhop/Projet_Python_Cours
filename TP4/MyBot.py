@@ -47,6 +47,8 @@ class MyBot(discord.Client):
                 logging.info(f"user {message.author} have used {message.content.split()[0]} \n")
         except IndexError:
             pass
+            
+    
         
         #selon la commande si elle est presente dans notre bibliothèque de fonctions
         for key in self.command:

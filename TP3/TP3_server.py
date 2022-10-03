@@ -5,7 +5,7 @@ import requests
 app = FastAPI()
 
 #Défini le chemin de l'API et les variables attendues
-@app.get("/{IP}/{API}")
+@app.get("/api?ip={IP}&key={API}")
 def read_root(IP, API):
     #ici l'on defini le header de la requete afin que le server traite notre requete comme
     #nous le voulons

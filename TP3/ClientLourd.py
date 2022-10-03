@@ -58,7 +58,9 @@ class Window(QWidget):
         if len(IP) < 7 :
             return
         #requete l'api local avec les donné fournis par les differents champs
-        response = requests.get(f"http://localhost:8000/{IP}/{API}").json()["results"]
+        response = requests.get(f"http://localhost:8000/api?ip={IP}&key={API}").json()
+        print(response)
+        #["results"]
         
         #differentes modificvation pour formatter les données a l'usage de l'utilisateur
         loclist = [loc["location"].replace(',', '/') for loc in response]
